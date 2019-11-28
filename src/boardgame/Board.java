@@ -34,4 +34,12 @@ public class Board {
     public Piece piece(Position position){
         return pieces[position.getRow()][position.getColumn()];
     }
+
+    //Ele vai ter que ir na matriz de peças do tabuleiro e vai ter que atribuir a essa posição
+    // a peça que veio como argumento
+    public void placePiece(Piece piece, Position position){
+        pieces[position.getRow()][position.getColumn()] = piece;
+        //Peça é acessivel diretamente porque colocamos protected, e estamos no mesmo pacote
+        piece.position = position;
+    }
 }
