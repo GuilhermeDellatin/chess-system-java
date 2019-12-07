@@ -34,6 +34,7 @@ public class ChessMatch {
         Position source = sourcePosition.toPosition();
         Position target = targetPosition.toPosition();
         validateSourcePosition(source);
+        validateTargetPosition(source, target);
         Piece capturedPiece = makeMove(source, target);
         return (ChessPiece) capturedPiece; //DownCasting para ChessPiece, porque essa peça capturada era do tipo Piece
     }
@@ -53,6 +54,15 @@ public class ChessMatch {
         //Estou testando se não tem nenhum movimento possível
         if(!board.piece(position).isThereAnyPossibleMove()){
             throw new ChessException("There is no possible moves for the chosen piece");
+        }
+    }
+
+    private void validateTargetPosition(Position source, Position target){
+        //Para validar basta testar se a posição de destino ela é um movimento possivel em relação
+        //a Peça que está na posição de origem
+        //Se pra peça de origem a posição de destino não é um movimento possível eu não posso mexer pra lá
+        if(!board.piece(source).possibleMove(target)){
+            throw new ChessException("The chosen piece can't move to target position");
         }
     }
 
