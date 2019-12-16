@@ -7,12 +7,24 @@ import chess.pieces.King;
 import chess.pieces.Rook;
 
 public class ChessMatch {
+    private int turn;
+    private Color currentPlayer;
     private Board board;
 
     public ChessMatch(){
         board = new Board(8, 8);
+        turn = 1;
+        currentPlayer = Color.WHITE;
         //Chamamos o initialSetup para testar
         initialSetup();
+    }
+
+    public int getTurn(){
+        return turn;
+    }
+
+    public Color getCurrentPlayer(){
+        return currentPlayer;
     }
 
     //Vamos retornar ChessPiece em vez de chess ou piece, porque estamos na camada de xadrez
@@ -42,6 +54,8 @@ public class ChessMatch {
         validateSourcePosition(source);
         validateTargetPosition(source, target);
         Piece capturedPiece = makeMove(source, target);
+        //Chamando a troca de turno após uma jogada
+        nextTurn();
         return (ChessPiece) capturedPiece; //DownCasting para ChessPiece, porque essa peça capturada era do tipo Piece
     }
 
@@ -57,6 +71,10 @@ public class ChessMatch {
             //Consideramos que é uma execessão tipica do jogo de xadrez..
             throw new ChessException("There is no piece on source position");
         }
+        //Para verificar se o jogador está no turno dele, e fazendo um downcasting para chamar o getColor
+        if(currentPlayer != ((ChessPiece)board.piece(position)).getColor()){
+            throw new ChessException("The chosen piece is not yours");
+        }
         //Estou testando se não tem nenhum movimento possível
         if(!board.piece(position).isThereAnyPossibleMove()){
             throw new ChessException("There is no possible moves for the chosen piece");
@@ -70,6 +88,11 @@ public class ChessMatch {
         if(!board.piece(source).possibleMove(target)){
             throw new ChessException("The chosen piece can't move to target position");
         }
+    }
+
+    private void nextTurn(){
+        turn++;
+        currentPlayer = (currentPlayer == Color.WHITE) ? Color.BLACK : Color.WHITE;
     }
 
     private void placeNewPiece(char column, int row, ChessPiece piece){
