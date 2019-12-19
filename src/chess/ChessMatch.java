@@ -91,9 +91,10 @@ public class ChessMatch {
 
     }
     private Piece makeMove(Position source, Position target){
-        Piece p = board.removePiece(source);
+        ChessPiece p = (ChessPiece) board.removePiece(source);
+        p.increaseMoveCount();
         Piece capturedPiece = board.removePiece(target);
-        board.placePiece(p, target);
+        board.placePiece(p, target);//Upcasting naturalmente
         //Sempre que uma peça for capturada, retiro da lista de peças no tabuleiro
         //E coloco na list de peças capturadas
         if(capturedPiece != null){
@@ -105,7 +106,8 @@ public class ChessMatch {
 
     //Método para desfazer o movimento, caso a pessoa se coloque em cheque
     private void undoMove(Position source, Position target, Piece capturedPiece){
-        Piece p = board.removePiece(target);
+        ChessPiece p = (ChessPiece)board.removePiece(target);
+        p.decreaseMoveCount();
         board.placePiece(p, source);
 
         if(capturedPiece != null){
